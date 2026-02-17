@@ -2,17 +2,17 @@
 
 import { createClient } from '@/lib/supabaseServer'
 
-export default async function SubmissionDetail({
-  params,
-}: {
-  params: { id: string }
-}) {
+export default async function SubmissionDetail(
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params
+
   const supabase = await createClient()
 
   const { data: submission, error } = await supabase
     .from('feedback_submissions')
     .select('*')
-    .eq('id', params.id)
+    .eq('id', id)
     .single()
 
   if (error || !submission) {
@@ -24,43 +24,8 @@ export default async function SubmissionDetail({
   }
 
   return (
-    <div className="p-10 space-y-8">
-      <h1 className="text-2xl font-bold">
-        {submission.title}
-      </h1>
-
-      <div className="grid grid-cols-2 gap-6">
-        <Info label="Type" value={submission.type} />
-        <Info label="Status" value={submission.status} />
-        <Info label="Priority" value={submission.priority || '-'} />
-        <Info label="Platform" value={submission.device_platform || '-'} />
-        <Info label="App Version" value={submission.app_version || '-'} />
-        <Info label="Module" value={submission.module || '-'} />
-      </div>
-
-      <Section title="Description">
-        {submission.description}
-      </Section>
-
-      {submission.expected_behavior && (
-        <Section title="Expected Behavior">
-          {submission.expected_behavior}
-        </Section>
-      )}
-
-      {submission.reproduction_steps && (
-        <Section title="Reproduction Steps">
-          {submission.reproduction_steps}
-        </Section>
-      )}
-
-      {submission.metadata && (
-        <Section title="Metadata">
-          <pre className="bg-gray-100 p-4 rounded text-sm overflow-auto">
-            {JSON.stringify(submission.metadata, null, 2)}
-          </pre>
-        </Section>
-      )}
+    <div className="p-10">
+      <h1 className="text-2xl font-bold">{submission.title}</h1>
     </div>
   )
 }
