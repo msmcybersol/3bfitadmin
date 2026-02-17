@@ -7,19 +7,15 @@ export default async function Dashboard() {
 
   const { data: submissions, error } = await supabase
     .from('feedback_submissions')
-    .select('*')
+    .select('status, priority')
 
-  return (
-    <div className="p-10">
-      <h1 className="text-2xl font-bold">
-        Debug Output
-      </h1>
-
-      <pre className="mt-6 bg-gray-100 p-4 text-sm overflow-auto">
-        {JSON.stringify({ submissions, error }, null, 2)}
-      </pre>
-    </div>
-  )
+  if (error) {
+    return (
+      <div className="p-10 text-red-500">
+        Error loading dashboard data.
+      </div>
+    )
+  }
 
   const counts = {
     open: 0,
@@ -32,10 +28,12 @@ export default async function Dashboard() {
   }
 
   submissions?.forEach((s) => {
-    if (counts[s.status as keyof typeof counts] !== undefined) {
+    // Count status
+    if (s.status in counts) {
       counts[s.status as keyof typeof counts]++
     }
 
+    // Count priority
     if (s.priority === 'high') counts.high++
     if (s.priority === 'critical') counts.critical++
   })
