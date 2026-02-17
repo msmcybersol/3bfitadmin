@@ -31,8 +31,8 @@ export default async function SubmissionDetail(
 
       <div className="space-y-3">
         <Info label="Type" value={submission.type} />
-        <div className="flex justify-between items-center border rounded p-4">
-            <span className="text-gray-500">Status</span>
+        <div className="flex justify-between items-center border rounded px-4 py-2">
+            <span className="text-sm text-gray-500">Status</span>
             <StatusEditor
                 id={submission.id}
                 currentStatus={submission.status}
@@ -73,9 +73,9 @@ export default async function SubmissionDetail(
 
 function Info({ label, value }: { label: string; value: string }) {
   return (
-    <div className="grid grid-cols-2 border rounded p-4">
-      <div className="text-gray-500">{label}</div>
-      <div className="font-medium text-right">{value}</div>
+    <div className="flex justify-between items-center border rounded px-4 py-2">
+      <span className="text-sm text-gray-500">{label}</span>
+      <span className="font-medium">{value}</span>
     </div>
   )
 }
