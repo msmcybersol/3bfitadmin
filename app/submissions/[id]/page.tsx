@@ -1,6 +1,7 @@
 // app/submissions/[id]/page.tsx
 
 import { createClient } from '@/lib/supabaseServer'
+import StatusEditor from '@/components/statusEditor'
 
 export default async function SubmissionDetail(
   { params }: { params: Promise<{ id: string }> }
@@ -30,7 +31,15 @@ export default async function SubmissionDetail(
 
       <div className="grid grid-cols-2 gap-6">
         <Info label="Type" value={submission.type} />
-        <Info label="Status" value={submission.status} />
+        <div className="border rounded p-4">
+            <div className="text-xs text-gray-500">Status</div>
+            <div className="mt-2">
+                <StatusEditor
+                id={submission.id}
+                currentStatus={submission.status}
+                />
+            </div>
+        </div>
         <Info label="Priority" value={submission.priority || '-'} />
         <Info label="Platform" value={submission.device_platform || '-'} />
         <Info label="App Version" value={submission.app_version || '-'} />
