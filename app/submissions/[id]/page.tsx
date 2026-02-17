@@ -32,15 +32,13 @@ export default async function SubmissionDetail(
       <div className="flex flex-col gap-3 items-start">
         <Info label="Type" value={submission.type} />
 
-        <div className="inline-flex items-center gap-6 border rounded px-4 py-2 w-fit min-w-[320px]">
-          <span className="text-sm text-gray-500 whitespace-nowrap">
-            Status
-          </span>
+        <Row>
+          <Label>Status</Label>
           <StatusEditor
             id={submission.id}
             currentStatus={submission.status}
           />
-        </div>
+        </Row>
 
         <Info label="Priority" value={submission.priority || '-'} />
         <Info label="Platform" value={submission.device_platform || '-'} />
@@ -75,18 +73,36 @@ export default async function SubmissionDetail(
   )
 }
 
-function Info({ label, value }: { label: string; value: string }) {
+/* ---------- Row Layout ---------- */
+
+function Row({ children }: { children: React.ReactNode }) {
   return (
-    <div className="inline-flex items-center gap-6 border rounded px-4 py-2 w-fit min-w-[320px]">
-      <span className="text-sm text-gray-500 whitespace-nowrap">
-        {label}
-      </span>
-      <span className="font-medium text-left">
-        {value}
-      </span>
+    <div className="grid grid-cols-[140px_auto] items-center gap-4 border rounded px-4 py-2 w-fit min-w-[340px]">
+      {children}
     </div>
   )
 }
+
+function Label({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="text-sm text-gray-500">
+      {children}
+    </span>
+  )
+}
+
+function Info({ label, value }: { label: string; value: string }) {
+  return (
+    <Row>
+      <Label>{label}</Label>
+      <span className="font-medium text-left">
+        {value}
+      </span>
+    </Row>
+  )
+}
+
+/* ---------- Sections ---------- */
 
 function Section({
   title,
