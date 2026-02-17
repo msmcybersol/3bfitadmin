@@ -29,15 +29,17 @@ export default async function SubmissionDetail(
         {submission.title}
       </h1>
 
-      <div className="space-y-3">
+      <div className="flex flex-col gap-3 items-start">
         <Info label="Type" value={submission.type} />
-        <div className="flex justify-between items-center border rounded px-4 py-2">
-            <span className="text-sm text-gray-500">Status</span>
-            <StatusEditor
-                id={submission.id}
-                currentStatus={submission.status}
-            />
+
+        <div className="inline-flex justify-between items-center gap-6 border rounded px-4 py-2 w-fit min-w-[320px]">
+          <span className="text-sm text-gray-500">Status</span>
+          <StatusEditor
+            id={submission.id}
+            currentStatus={submission.status}
+          />
         </div>
+
         <Info label="Priority" value={submission.priority || '-'} />
         <Info label="Platform" value={submission.device_platform || '-'} />
         <Info label="App Version" value={submission.app_version || '-'} />
@@ -73,9 +75,13 @@ export default async function SubmissionDetail(
 
 function Info({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex justify-between items-center border rounded px-4 py-2">
-      <span className="text-sm text-gray-500">{label}</span>
-      <span className="font-medium">{value}</span>
+    <div className="inline-flex justify-between items-center gap-6 border rounded px-4 py-2 w-fit min-w-[320px]">
+      <span className="text-sm text-gray-500 whitespace-nowrap">
+        {label}
+      </span>
+      <span className="font-medium">
+        {value}
+      </span>
     </div>
   )
 }
@@ -88,9 +94,13 @@ function Section({
   children: React.ReactNode
 }) {
   return (
-    <div className="space-y-2">
-      <h2 className="text-lg font-semibold">{title}</h2>
-      <div className="border rounded p-4">{children}</div>
+    <div className="space-y-2 max-w-4xl">
+      <h2 className="text-lg font-semibold">
+        {title}
+      </h2>
+      <div className="border rounded p-4 w-fit min-w-[400px]">
+        {children}
+      </div>
     </div>
   )
 }
