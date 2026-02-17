@@ -32,8 +32,10 @@ export default async function SubmissionDetail(
       <div className="flex flex-col gap-3 items-start">
         <Info label="Type" value={submission.type} />
 
-        <div className="inline-flex justify-between items-center gap-6 border rounded px-4 py-2 w-fit min-w-[320px]">
-          <span className="text-sm text-gray-500">Status</span>
+        <div className="inline-flex items-center gap-6 border rounded px-4 py-2 w-fit min-w-[320px]">
+          <span className="text-sm text-gray-500 whitespace-nowrap">
+            Status
+          </span>
           <StatusEditor
             id={submission.id}
             currentStatus={submission.status}
@@ -75,11 +77,11 @@ export default async function SubmissionDetail(
 
 function Info({ label, value }: { label: string; value: string }) {
   return (
-    <div className="inline-flex justify-between items-center gap-6 border rounded px-4 py-2 w-fit min-w-[320px]">
+    <div className="inline-flex items-center gap-6 border rounded px-4 py-2 w-fit min-w-[320px]">
       <span className="text-sm text-gray-500 whitespace-nowrap">
         {label}
       </span>
-      <span className="font-medium">
+      <span className="font-medium text-left">
         {value}
       </span>
     </div>
