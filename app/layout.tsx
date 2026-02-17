@@ -1,5 +1,7 @@
 // app/layout.tsx
 
+import './globals.css'
+
 export const metadata = {
   title: '3BFit Admin',
   description: '3BFit Administrative Console',
