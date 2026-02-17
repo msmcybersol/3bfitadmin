@@ -31,14 +31,12 @@ export default async function SubmissionDetail(
 
       <div className="grid grid-cols-2 gap-6">
         <Info label="Type" value={submission.type} />
-        <div className="border rounded p-4">
-            <div className="text-xs text-gray-500">Status</div>
-            <div className="mt-2">
-                <StatusEditor
+        <div className="flex justify-between items-center border rounded p-4">
+            <span className="text-gray-500">Status</span>
+            <StatusEditor
                 id={submission.id}
                 currentStatus={submission.status}
-                />
-            </div>
+            />
         </div>
         <Info label="Priority" value={submission.priority || '-'} />
         <Info label="Platform" value={submission.device_platform || '-'} />
@@ -75,9 +73,9 @@ export default async function SubmissionDetail(
 
 function Info({ label, value }: { label: string; value: string }) {
   return (
-    <div className="border rounded p-4">
-      <div className="text-xs text-gray-500">{label}</div>
-      <div className="mt-1 font-medium">{value}</div>
+    <div className="grid grid-cols-2 border rounded p-4">
+      <div className="text-gray-500">{label}</div>
+      <div className="font-medium text-right">{value}</div>
     </div>
   )
 }
