@@ -29,7 +29,7 @@ export default async function SubmissionDetail(
         {submission.title}
       </h1>
 
-      <div className="grid grid-cols-2 gap-6">
+      <div className="space-y-3">
         <Info label="Type" value={submission.type} />
         <div className="flex justify-between items-center border rounded p-4">
             <span className="text-gray-500">Status</span>
