@@ -7,15 +7,19 @@ export default async function Dashboard() {
 
   const { data: submissions, error } = await supabase
     .from('feedback_submissions')
-    .select('status, priority')
+    .select('*')
 
-  if (error) {
-    return (
-      <div className="p-10 text-red-500">
-        Error loading dashboard data.
-      </div>
-    )
-  }
+  return (
+    <div className="p-10">
+      <h1 className="text-2xl font-bold">
+        Debug Output
+      </h1>
+
+      <pre className="mt-6 bg-gray-100 p-4 text-sm overflow-auto">
+        {JSON.stringify({ submissions, error }, null, 2)}
+      </pre>
+    </div>
+  )
 
   const counts = {
     open: 0,
