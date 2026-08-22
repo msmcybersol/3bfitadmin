@@ -33,7 +33,7 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-black text-white">
       <form onSubmit={handleLogin} className="space-y-4 w-80">
-        <h1 className="text-xl font-bold">3BFit Admin Login</h1>
+        <h1 className="text-xl font-bold">3BFit Admin - Login</h1>
 
         <input
           type="email"
