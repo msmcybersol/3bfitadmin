@@ -23,7 +23,6 @@ export default function AdminNavbar() {
   return (
     <nav className="sticky top-0 z-50 flex items-center justify-between border-b bg-white px-6 py-4">
       <div className="flex items-center gap-6">
-        <Link href="/" className="font-bold">3BFit Admin</Link>
         <Link href="/" className={pathname === '/' ? 'font-semibold text-blue-600' : 'text-gray-600 hover:text-black'}>Dashboard</Link>
         <Link href="/submissions" className={pathname.startsWith('/submissions') ? 'font-semibold text-blue-600' : 'text-gray-600 hover:text-black'}>Feedback Submissions</Link>
       </div>
