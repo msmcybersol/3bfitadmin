@@ -75,7 +75,7 @@ export default function AssignUserSelect({ id, currentAssignedTo }: { id: string
           const fullName = [member.first_name, member.last_name].filter(Boolean).join(' ')
 
           return (
-            <option key={member.id} value={member.id}>{fullName || member.id} — {member.role}</option>
+            <option key={member.id} value={member.id}>{fullName || member.id} - {member.role}</option>
           )
         })}
       </select>
