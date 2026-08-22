@@ -9,6 +9,8 @@ import { createClient } from '@/lib/supabaseClient'
 type StaffUser = {
   id: string
   role: string
+  first_name: string | null
+  last_name: string | null
 }
 
 export default function AssignUserSelect({ id, currentAssignedTo }: { id: string; currentAssignedTo: string | null }) {
@@ -21,9 +23,26 @@ export default function AssignUserSelect({ id, currentAssignedTo }: { id: string
 
   useEffect(() => {
     const loadStaff = async () => {
-      const { data, error } = await supabase.from('users').select('id, role').in('role', ['admin', 'moderator', 'support']).order('role')
-      if (!error && data) setStaff(data)
+      const { data: staffUsers, error: staffError } = await supabase.from('users').select('id, role').in('role', ['admin', 'moderator', 'support']).order('role')
+      if (staffError || !staffUsers) return
+
+      const ids = staffUsers.map((member) => member.id)
+      const { data: profiles, error: profileError } = await supabase.from('user_profiles').select('id, first_name, last_name').in('id', ids)
+      if (profileError || !profiles) return
+
+      const profileMap = new Map(profiles.map((profile) => [profile.id, profile]))
+      setStaff(staffUsers.map((member) => {
+        const profile = profileMap.get(member.id)
+
+        return {
+          id: member.id,
+          role: member.role,
+          first_name: profile?.first_name ?? null,
+          last_name: profile?.last_name ?? null,
+        }
+      }))
     }
+
     void loadStaff()
   }, [supabase])
 
@@ -52,17 +71,17 @@ export default function AssignUserSelect({ id, currentAssignedTo }: { id: string
     <div className="space-y-3">
       <select value={assignedTo} onChange={(e) => setAssignedTo(e.target.value)} className="border rounded p-2">
         <option value="">Unassigned</option>
-        {staff.map((member) => (
-          <option key={member.id} value={member.id}>
-            {member.role} — {member.id}
-          </option>
-        ))}
+        {staff.map((member) => {
+          const fullName = [member.first_name, member.last_name].filter(Boolean).join(' ')
+
+          return (
+            <option key={member.id} value={member.id}>{fullName || member.id} — {member.role}</option>
+          )
+        })}
       </select>
 
       {hasChanged && (
-        <button onClick={handleSave} disabled={saving} className="bg-blue-600 text-white px-4 py-2 rounded">
-          {saving ? 'Saving...' : 'Save Assignment'}
-        </button>
+        <button onClick={handleSave} disabled={saving} className="bg-blue-600 text-white px-4 py-2 rounded">{saving ? 'Saving...' : 'Save Assignment'}</button>
       )}
 
       {saved && (
