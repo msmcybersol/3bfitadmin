@@ -40,9 +40,9 @@ export default async function Dashboard() {
 
   return (
     <div className="p-10 space-y-8">
-      <h1 className="text-2xl font-bold">
-        3BFit Admin Dashboard
-      </h1>
+      <h1 className="text-2xl font-bold">3BFit Admin Dashboard</h1>
+
+      <div><a href="/submissions" className="inline-block bg-blue-600 text-white px-5 py-3 rounded font-medium">Manage Feedback Submissions</a></div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
         <Card label="Open" value={counts.open} />
