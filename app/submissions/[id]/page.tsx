@@ -3,6 +3,7 @@
 import { createClient } from '@/lib/supabaseServer'
 import StatusEditor from '@/components/statusEditor'
 import AssignUserSelect from '@/components/assignUserSelect'
+import CommentThread from '@/components/commentThread'
 
 export default async function SubmissionDetail(
   { params }: { params: Promise<{ id: string }> }
@@ -54,6 +55,10 @@ export default async function SubmissionDetail(
       {submission.reproduction_steps && (
         <Section title="Reproduction Steps">{submission.reproduction_steps}</Section>
       )}
+
+      <Section title="Conversation">
+        <CommentThread submissionId={submission.id} />
+      </Section>
 
       {submission.metadata && (
         <Section title="Metadata">
