@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabaseServer'
 import StatusEditor from '@/components/statusEditor'
+import AssignUserSelect from '@/components/assignUserSelect'
 
 export default async function SubmissionDetail(
   { params }: { params: Promise<{ id: string }> }
@@ -17,27 +18,25 @@ export default async function SubmissionDetail(
 
   if (error || !submission) {
     return (
-      <div className="p-10 text-red-500">
-        Submission not found.
-      </div>
+      <div className="p-10 text-red-500">Submission not found.</div>
     )
   }
 
   return (
     <div className="p-10 space-y-8">
-      <h1 className="text-2xl font-bold">
-        {submission.title}
-      </h1>
+      <h1 className="text-2xl font-bold">{submission.title}</h1>
 
       <div className="flex flex-col gap-3 items-start">
         <Info label="Type" value={submission.type} />
 
         <Row>
           <Label>Status</Label>
-          <StatusEditor
-            id={submission.id}
-            currentStatus={submission.status}
-          />
+          <StatusEditor id={submission.id} currentStatus={submission.status} />
+        </Row>
+
+        <Row>
+          <Label>Assigned To</Label>
+          <AssignUserSelect id={submission.id} currentAssignedTo={submission.assigned_to} />
         </Row>
 
         <Info label="Priority" value={submission.priority || '-'} />
@@ -46,27 +45,19 @@ export default async function SubmissionDetail(
         <Info label="Module" value={submission.module || '-'} />
       </div>
 
-      <Section title="Description">
-        {submission.description}
-      </Section>
+      <Section title="Description">{submission.description}</Section>
 
       {submission.expected_behavior && (
-        <Section title="Expected Behavior">
-          {submission.expected_behavior}
-        </Section>
+        <Section title="Expected Behavior">{submission.expected_behavior}</Section>
       )}
 
       {submission.reproduction_steps && (
-        <Section title="Reproduction Steps">
-          {submission.reproduction_steps}
-        </Section>
+        <Section title="Reproduction Steps">{submission.reproduction_steps}</Section>
       )}
 
       {submission.metadata && (
         <Section title="Metadata">
-          <pre className="bg-gray-100 p-4 rounded text-sm overflow-auto">
-            {JSON.stringify(submission.metadata, null, 2)}
-          </pre>
+          <pre className="bg-gray-100 p-4 rounded text-sm overflow-auto">{JSON.stringify(submission.metadata, null, 2)}</pre>
         </Section>
       )}
     </div>
@@ -77,17 +68,13 @@ export default async function SubmissionDetail(
 
 function Row({ children }: { children: React.ReactNode }) {
   return (
-    <div className="grid grid-cols-[140px_auto] items-center gap-4 border rounded px-4 py-2 w-fit min-w-[340px]">
-      {children}
-    </div>
+    <div className="grid grid-cols-[140px_auto] items-center gap-4 border rounded px-4 py-2 w-fit min-w-[340px]">{children}</div>
   )
 }
 
 function Label({ children }: { children: React.ReactNode }) {
   return (
-    <span className="text-sm text-gray-500">
-      {children}
-    </span>
+    <span className="text-sm text-gray-500">{children}</span>
   )
 }
 
@@ -95,9 +82,7 @@ function Info({ label, value }: { label: string; value: string }) {
   return (
     <Row>
       <Label>{label}</Label>
-      <span className="font-medium text-left">
-        {value}
-      </span>
+      <span className="font-medium text-left">{value}</span>
     </Row>
   )
 }
@@ -113,12 +98,8 @@ function Section({
 }) {
   return (
     <div className="space-y-2 max-w-4xl">
-      <h2 className="text-lg font-semibold">
-        {title}
-      </h2>
-      <div className="border rounded p-4 w-fit min-w-[400px]">
-        {children}
-      </div>
+      <h2 className="text-lg font-semibold">{title}</h2>
+      <div className="border rounded p-4 w-fit min-w-[400px]">{children}</div>
     </div>
   )
 }
