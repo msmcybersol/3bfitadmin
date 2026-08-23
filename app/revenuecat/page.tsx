@@ -29,7 +29,7 @@ type DeleteResponse = {
   error?: string;
 };
 
-function parseCsvLine(line: string) {
+function parseCsvLine(line: string, delimiter: string) {
   const values: string[] = [];
   let value = "";
   let insideQuotes = false;
@@ -48,7 +48,7 @@ function parseCsvLine(line: string) {
       continue;
     }
 
-    if (character === "," && !insideQuotes) {
+    if (character === delimiter && !insideQuotes) {
       values.push(value);
       value = "";
       continue;
@@ -68,10 +68,11 @@ function parseCsv(content: string): RevenueCatCustomer[] {
     return [];
   }
 
-  const headers = parseCsvLine(lines[0]).map(header => header.trim());
+  const delimiter = lines[0].includes(";") ? ";" : ",";
+  const headers = parseCsvLine(lines[0], delimiter).map(header => header.trim());
 
   return lines.slice(1).map(line => {
-    const values = parseCsvLine(line);
+    const values = parseCsvLine(line, delimiter);
     const row = Object.fromEntries(headers.map((header, index) => [header, values[index]?.trim() ?? ""]));
 
     return {
