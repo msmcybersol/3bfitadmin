@@ -1,5 +1,3 @@
-// app/revenuecat/page.tsx
-
 "use client";
 
 import { ChangeEvent, useMemo, useState } from "react";
