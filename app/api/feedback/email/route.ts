@@ -1,11 +1,11 @@
 // app/api/feedback/email/route.ts
 
 import { NextResponse } from 'next/server'
+import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { createClient } from '@/lib/supabaseServer'
 
 export async function POST(request: Request) {
   const supabase = await createClient()
-
   const { data: { user }, error: authError } = await supabase.auth.getUser()
 
   if (authError || !user) {
@@ -32,7 +32,15 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Submission not found' }, { status: 404 })
   }
 
-  const { data: profile, error: profileError } = await supabase.from('user_profiles').select('email, first_name').eq('id', submission.user_id).single()
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+  if (!supabaseUrl || !serviceRoleKey) {
+    return NextResponse.json({ error: 'Supabase server credentials are not configured' }, { status: 500 })
+  }
+
+  const adminSupabase = createSupabaseClient(supabaseUrl, serviceRoleKey, { auth: { persistSession: false, autoRefreshToken: false } })
+  const { data: profile, error: profileError } = await adminSupabase.from('user_profiles').select('email, first_name').eq('id', submission.user_id).single()
 
   if (profileError || !profile?.email) {
     return NextResponse.json({ error: 'User does not have a feedback email address' }, { status: 422 })
