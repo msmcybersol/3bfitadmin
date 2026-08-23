@@ -1,4 +1,4 @@
-// F:/AppDev/3bfit/_admin/components/commentThread.tsx
+// components/commentThread.tsx
 
 'use client'
 
@@ -59,13 +59,30 @@ export default function CommentThread({ submissionId }: { submissionId: string }
       is_internal: isInternal,
     })
 
-    setSaving(false)
-
     if (error) {
+      setSaving(false)
       alert('Error adding comment')
       return
     }
 
+    if (!isInternal) {
+      const emailResponse = await fetch('/api/feedback/email', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({submissionId, content: trimmedContent}),
+      })
+
+      if (!emailResponse.ok) {
+        setSaving(false)
+        setContent('')
+        setIsInternal(false)
+        await loadComments()
+        alert('Comment saved, but email delivery failed')
+        return
+      }
+    }
+
+    setSaving(false)
     setContent('')
     setIsInternal(false)
     await loadComments()

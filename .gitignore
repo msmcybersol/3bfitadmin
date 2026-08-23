@@ -1,1 +1,27 @@
-node_modules
+# Node
+node_modules/
+npm-debug.log*
+
+# Expo
+.expo/
+.expo-shared/
+web-build/
+
+# Android / iOS native builds
+/android/
+/ios/
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Env files
+.env
+.env.*
+
+# Signing credentials
+*.jks
+*.keystore
+*.p12
+*.pfx

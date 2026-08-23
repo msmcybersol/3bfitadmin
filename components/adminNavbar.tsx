@@ -1,4 +1,4 @@
-// F:/AppDev/3bfit/_admin/components/adminNavbar.tsx
+// components/adminNavbar.tsx
 
 'use client'
 
