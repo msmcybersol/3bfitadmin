@@ -10,7 +10,27 @@ type DeleteResult = {
   error?: string;
 };
 
+const CONCURRENCY = 3;
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+async function deleteCustomer(appUserId: string, secretApiKey: string): Promise<DeleteResult> {
+  try {
+    const response = await fetch(`https://api.revenuecat.com/v1/subscribers/${encodeURIComponent(appUserId)}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${secretApiKey}` },
+      cache: "no-store",
+    });
+
+    if (response.ok || response.status === 404) {
+      return { appUserId, status: "deleted", httpStatus: response.status };
+    }
+
+    const errorText = await response.text();
+    return { appUserId, status: "failed", httpStatus: response.status, error: errorText || response.statusText };
+  } catch (error) {
+    return { appUserId, status: "failed", error: error instanceof Error ? error.message : "Unknown RevenueCat deletion error" };
+  }
+}
 
 export async function POST(request: Request) {
   const supabase = await createClient();
@@ -47,25 +67,14 @@ export async function POST(request: Request) {
 
   const results: DeleteResult[] = [];
 
-  for (const appUserId of customerIds) {
-    try {
-      const response = await fetch(`https://api.revenuecat.com/v1/subscribers/${encodeURIComponent(appUserId)}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${secretApiKey}` },
-        cache: "no-store",
-      });
+  for (let index = 0; index < customerIds.length; index += CONCURRENCY) {
+    const batch = customerIds.slice(index, index + CONCURRENCY);
+    const batchResults = await Promise.all(batch.map(appUserId => deleteCustomer(appUserId, secretApiKey)));
+    results.push(...batchResults);
 
-      if (response.ok) {
-        results.push({ appUserId, status: "deleted", httpStatus: response.status });
-      } else {
-        const errorText = await response.text();
-        results.push({ appUserId, status: "failed", httpStatus: response.status, error: errorText || response.statusText });
-      }
-    } catch (error) {
-      results.push({ appUserId, status: "failed", error: error instanceof Error ? error.message : "Unknown RevenueCat deletion error" });
+    if (index + CONCURRENCY < customerIds.length) {
+      await delay(1000);
     }
-
-    await delay(1000);
   }
 
   const deleted = results.filter(result => result.status === "deleted").length;
